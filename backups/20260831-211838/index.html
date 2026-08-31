@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrubs Ilyas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <section class="hero">
+
+    <!-- Layer 1: background plate (bottom). Gradient fallback shows while
+         assets/hero-bg.jpg does not exist yet; the <img> replaces it the
+         moment the real photographic plate is dropped in. -->
+    <div class="hero-bg-fallback" aria-hidden="true"></div>
+    <img class="hero-bg" src="assets/hero-bg.jpg" alt="">
+
+    <!-- Top navigation -->
+    <nav class="hero-nav">
+      <!-- data-placeholder: brand wordmark copy to be finalized -->
+      <span class="brand-wordmark" data-placeholder="brand-name">Scrubs Ilyas</span>
+      <ul class="nav-links">
+        <li><a href="#">Shop</a></li>
+        <li><a href="#">Collections</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Layer 2: copy zone (left ~0-45% band) -->
+    <div class="copy-zone">
+      <div class="copy-inner">
+        <h1 class="hero-headline" data-placeholder="headline">Engineered for the Ones Who Show Up.</h1>
+        <p class="hero-subhead" data-placeholder="subheadline">
+          Premium stretch-woven scrubs built from fabric that moves with a
+          twelve-hour shift and holds its color through every wash.
+        </p>
+        <a href="#" class="cta-button" data-placeholder="cta-label">Shop the Collection</a>
+      </div>
+    </div>
+
+    <!-- Layer 3: hero subject cutout (foreground, right ~45-90% band) -->
+    <img class="hero-subject" src="assets/hero-subject.png" alt="">
+
+  </section>
+
+</body>
+</html>

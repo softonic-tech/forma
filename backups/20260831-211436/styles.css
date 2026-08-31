@@ -1,0 +1,272 @@
+/* =========================================================================
+   Scrubs Ilyas — Hero Page Scaffold
+   Static HTML/CSS only. No build step, no JS, no external requests.
+   Layout percentages sourced from STUDY.md (forensic measurement study).
+   ========================================================================= */
+
+:root {
+  /* ---- Color system (STUDY.md §7) ------------------------------------- */
+  --bg-darkest: #01030c;
+  --bg-dark: #04101c;
+  --cyan-highlight: #4a77a4;
+  --floor-blue: #365169;
+  --teal-accent: #1c6d89;
+  --text-primary: #eaf3f8;
+  --text-muted: #9fb3c4;
+
+  /* ---- Hero subject cutout placement (STUDY.md §4) ---------------------
+     Easy-to-tune custom properties: the orchestrator will fine-tune these
+     numbers once the real cutout asset lands and can be screenshot-compared
+     against reference/hero.png.
+     Measured box: x ~45%-90% (width ~45vw), y ~10%-92% (height ~82vh). */
+  --subject-left: 47%;
+  --subject-top: 6%;
+  --subject-height: 94%;
+
+  /* ---- Copy zone (STUDY.md §2, empty copy zone 0%-45%) ------------------ */
+  --copy-zone-max-width: 42%;
+
+  /* ---- Shared type stack (system-only, zero network requests) --------- */
+  --font-sans: 'Helvetica Neue', Arial, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+}
+
+/* ---- Reset ------------------------------------------------------------ */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-darkest);
+  color: var(--text-primary);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* =========================================================================
+   Hero section — full-bleed, three stacked layers
+   ========================================================================= */
+
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--bg-darkest);
+}
+
+/* ---- Layer 1: background plate (bottom) -------------------------------
+   Missing-asset-safe: an <img> is used instead of background-image so a
+   404 simply leaves the .hero background-color (--bg-darkest) showing
+   through with no broken-image artifact. A CSS gradient placeholder sits
+   behind it via .hero-bg-fallback until the real plate exists. */
+
+.hero-bg-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    100deg,
+    var(--bg-darkest) 0%,
+    var(--bg-darkest) 45%,
+    var(--bg-dark) 100%
+  );
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ---- Layer 2: copy zone (middle) ---------------------------------------
+   Occupies the left ~0-45% band per STUDY.md; does not overlap the
+   hero subject, so z-index relative to the subject is not load-bearing —
+   it is placed above the background layers regardless. */
+
+.copy-zone {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-width: var(--copy-zone-max-width);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6vh 5vw;
+}
+
+.copy-inner {
+  max-width: 100%;
+}
+
+/* ---- Top navigation bar ------------------------------------------------ */
+
+.hero-nav {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 7vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2vw;
+  padding: 0 5vw;
+  flex-wrap: wrap;
+}
+
+.brand-wordmark {
+  font-size: clamp(0.9rem, 1.4vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* data-placeholder: "SCRUBS ILYAS" is a placeholder wordmark — orchestrator
+   should confirm/replace with final brand name and casing. */
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.2vw, 2.4rem);
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  font-size: clamp(0.75rem, 0.95vw, 0.9rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  color: var(--text-primary);
+}
+
+/* ---- Headline / subheadline / CTA -------------------------------------- */
+
+.hero-headline {
+  font-size: clamp(2.2rem, 4.5vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
+  max-width: 16ch;
+  overflow-wrap: break-word;
+}
+
+/* placeholder headline copy: "Engineered for the Ones Who Show Up." —
+   orchestrator to review/replace with final campaign line. */
+
+.hero-subhead {
+  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--text-muted);
+  max-width: 32ch;
+  margin: 0 0 2.5rem 0;
+  overflow-wrap: break-word;
+}
+
+/* placeholder subheadline copy — orchestrator to review/replace. */
+
+.cta-button {
+  display: inline-block;
+  font-family: inherit;
+  font-size: clamp(0.85rem, 1vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--teal-accent), var(--cyan-highlight));
+  padding: 1.1em 2.4em;
+  border-radius: 999px;
+  border: none;
+  box-shadow: 0 0 0 1px rgba(74, 119, 164, 0.35),
+    0 0.6em 2em -0.4em rgba(74, 119, 164, 0.55);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* placeholder CTA label: "Shop the Collection" — orchestrator to
+   review/replace. */
+
+/* ---- Layer 3: hero subject cutout (top, foreground) -------------------- */
+
+.hero-subject {
+  position: absolute;
+  z-index: 4;
+  left: var(--subject-left);
+  top: var(--subject-top);
+  height: var(--subject-height);
+  width: auto;
+  max-width: 55%;
+  object-fit: contain;
+  object-position: bottom center;
+}
+
+/* =========================================================================
+   Narrow-viewport reflow (no horizontal scroll at any width)
+   ========================================================================= */
+
+@media (max-width: 56rem) {
+  .copy-zone {
+    max-width: 60%;
+  }
+
+  .hero-headline {
+    max-width: 100%;
+  }
+
+  .hero-subhead {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 40rem) {
+  .copy-zone {
+    max-width: 100%;
+  }
+
+  .hero-nav {
+    min-height: auto;
+    padding: 2vh 5vw;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .hero-subject {
+    max-width: 70%;
+  }
+}
