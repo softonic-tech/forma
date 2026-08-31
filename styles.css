@@ -19,9 +19,9 @@
      numbers once the real cutout asset lands and can be screenshot-compared
      against reference/hero.png.
      Measured box: x ~45%-90% (width ~45vw), y ~10%-92% (height ~82vh). */
-  --subject-left: 45%;
-  --subject-top: 10%;
-  --subject-height: 82%;
+  --subject-left: 47%;
+  --subject-top: 6%;
+  --subject-height: 94%;
 
   /* ---- Copy zone (STUDY.md §2, empty copy zone 0%-45%) ------------------ */
   --copy-zone-max-width: 42%;
