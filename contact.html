@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Scrubs Ilyas</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <div class="nav-backdrop" data-nav-backdrop hidden></div>
+
+  <header class="site-header">
+    <a class="brand-wordmark" href="index.html">Scrubs Ilyas</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="site-nav">
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="shop.html?category=set">Collections</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" aria-current="page">Contact</a></li>
+    </ul>
+  </header>
+
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Contact</p>
+      <h1>Order, ask, or request a college set.</h1>
+      <p class="lede">WhatsApp is the fastest way to reach us. Use the form and we will open a pre-filled message for you.</p>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <div class="container split">
+      <div>
+        <ul class="contact-list reveal">
+          <li>
+            <span>WhatsApp</span>
+            <a data-whatsapp-link href="#">Message us</a>
+          </li>
+          <li>
+            <span>Phone</span>
+            <a data-config-phone-link data-config="phone" href="tel:+923001234567">+92 300 1234567</a>
+          </li>
+          <li>
+            <span>Email</span>
+            <a data-config="email" href="mailto:orders@scrubsilyas.com">orders@scrubsilyas.com</a>
+          </li>
+          <li>
+            <span>Based in</span>
+            <strong data-config="city">Lahore, Pakistan</strong>
+          </li>
+        </ul>
+      </div>
+
+      <form class="form-card reveal" data-contact-form>
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" required>
+        </div>
+        <div class="field">
+          <label for="college">College (optional)</label>
+          <input id="college" name="college" type="text">
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required placeholder="Size, color, quantity, or a bulk/college request."></textarea>
+        </div>
+        <button type="submit" class="cta-button">Send on WhatsApp</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand-wordmark" href="index.html">Scrubs Ilyas</a>
+        <p>Uniforms made and sold for medical college students.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Shop</h3>
+        <a href="shop.html">All uniforms</a>
+        <a href="shop.html?category=set">Sets</a>
+        <a href="size-guide.html">Size guide</a>
+      </div>
+      <div class="footer-col">
+        <h3>Company</h3>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h3>Order</h3>
+        <p>WhatsApp us to place an order or request a college set.</p>
+        <a data-whatsapp-link href="#">Message on WhatsApp</a>
+      </div>
+    </div>
+    <div class="container">
+      <p class="footer-legal">© 2026 Scrubs Ilyas. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

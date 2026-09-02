@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop — Scrubs Ilyas</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <div class="nav-backdrop" data-nav-backdrop hidden></div>
+
+  <header class="site-header">
+    <a class="brand-wordmark" href="index.html">Scrubs Ilyas</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="site-nav">
+      <li><a href="shop.html" aria-current="page">Shop</a></li>
+      <li><a href="shop.html?category=set">Collections</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </header>
+
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Shop</p>
+      <h1>Medical college uniforms</h1>
+      <p class="lede">Stretch-woven sets, tops, and cargo pants. Choose a color and size, then order on WhatsApp.</p>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <div class="container">
+      <div class="filters reveal">
+        <div class="filter-row">
+          <span class="filter-label">Type</span>
+          <button type="button" class="filter-btn" data-filter-category="all">All</button>
+          <button type="button" class="filter-btn" data-filter-category="set">Sets</button>
+          <button type="button" class="filter-btn" data-filter-category="top">Tops</button>
+          <button type="button" class="filter-btn" data-filter-category="pants">Pants</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Color</span>
+          <button type="button" class="filter-btn" data-filter-color="all">All</button>
+          <button type="button" class="filter-btn" data-filter-color="teal">Teal</button>
+          <button type="button" class="filter-btn" data-filter-color="navy">Navy</button>
+          <button type="button" class="filter-btn" data-filter-color="olive">Olive</button>
+        </div>
+      </div>
+      <div class="product-grid" data-shop-grid></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand-wordmark" href="index.html">Scrubs Ilyas</a>
+        <p>Uniforms made and sold for medical college students.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Shop</h3>
+        <a href="shop.html">All uniforms</a>
+        <a href="shop.html?category=set">Sets</a>
+        <a href="size-guide.html">Size guide</a>
+      </div>
+      <div class="footer-col">
+        <h3>Company</h3>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h3>Order</h3>
+        <p>WhatsApp us to place an order or request a college set.</p>
+        <a data-whatsapp-link href="#">Message on WhatsApp</a>
+      </div>
+    </div>
+    <div class="container">
+      <p class="footer-legal">© 2026 Scrubs Ilyas. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
