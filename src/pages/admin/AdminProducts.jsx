@@ -55,13 +55,13 @@ export default function AdminProducts() {
               <td>
                 <img className="admin-thumb" src={p.image} alt="" />
               </td>
-              <td>
+              <td data-label="Name">
                 {p.name}
                 {p.featured ? ' · Featured' : ''}
               </td>
-              <td>{formatPrice(p.price)}</td>
-              <td>{p.categoryLabel}</td>
-              <td>
+              <td data-label="Price">{formatPrice(p.price)}</td>
+              <td data-label="Type">{p.categoryLabel}</td>
+              <td data-label="Status">
                 <span className={'admin-badge ' + (p.active ? 'confirmed' : 'cancelled')}>{p.active ? 'Live' : 'Hidden'}</span>
               </td>
               <td className="admin-actions">
