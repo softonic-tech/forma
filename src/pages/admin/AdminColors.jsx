@@ -85,10 +85,10 @@ export default function AdminColors() {
               <td>
                 <i style={{ width: 22, height: 22, borderRadius: '50%', background: c.hex, display: 'block' }} />
               </td>
-              <td>
+              <td data-label="Name">
                 <input value={c.name} onChange={(e) => setColors((all) => all.map((x) => (x.id === c.id ? { ...x, name: e.target.value } : x)))} />
               </td>
-              <td>
+              <td data-label="Hex">
                 <input value={c.hex} onChange={(e) => setColors((all) => all.map((x) => (x.id === c.id ? { ...x, hex: e.target.value } : x)))} />
               </td>
               <td className="admin-actions">

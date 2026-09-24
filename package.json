@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -k -n api,web -c cyan,magenta \"npm:dev:api\" \"npm:dev:web\"",
-    "dev:api": "node --watch server/index.js",
-    "dev:web": "vite",
-    "build": "vite build",
-    "start": "NODE_ENV=production node server/index.js",
+    "dev": "node init && concurrently -k -n api,web -c cyan,magenta \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "node init && node --watch server/index.js",
+    "dev:web": "node init && vite",
+    "build": "node init && vite build",
+    "start": "node init && NODE_ENV=production node server/index.js",
     "preview": "vite preview"
   },
   "dependencies": {
