@@ -22,7 +22,7 @@ export function verifyPassword(password, hash) {
 }
 
 export function signAdmin(admin) {
-  return jwt.sign({ sub: admin.id, email: admin.email }, jwtSecret(), { expiresIn: WEEK });
+  return jwt.sign({ sub: String(admin.id || admin._id), email: admin.email }, jwtSecret(), { expiresIn: WEEK });
 }
 
 export function cookieOptions() {
@@ -43,15 +43,16 @@ export function clearAuthCookie(res) {
   res.clearCookie(COOKIE, { ...cookieOptions(), maxAge: 0 });
 }
 
-export function requireAdmin(db) {
-  return function adminGuard(req, res, next) {
+export function requireAdmin() {
+  return async function adminGuard(req, res, next) {
     const token = req.cookies?.[COOKIE];
     if (!token) return res.status(401).json({ error: 'Sign in required' });
     try {
       const payload = jwt.verify(token, jwtSecret());
-      const admin = db.prepare('SELECT id, email FROM admins WHERE id = ?').get(payload.sub);
+      const { Admin } = await import('./models.js');
+      const admin = await Admin.findById(payload.sub).lean();
       if (!admin) return res.status(401).json({ error: 'Sign in required' });
-      req.admin = admin;
+      req.admin = { id: String(admin._id), email: admin.email };
       next();
     } catch {
       return res.status(401).json({ error: 'Sign in required' });

@@ -1,8 +1,13 @@
 import { Router } from 'express';
-import { db, getProductBySlug, getSettings, listColors, listProducts, now } from '../db.js';
+import { getProductBySlug, getSettings, listColors, listProducts, nextId, now } from '../db.js';
+import { Inquiry, Order } from '../models.js';
 import { inquiryPayload, orderPayload } from '../validate.js';
 
-const publicLimiterSkip = (req, res, next) => next();
+const publicLimiterSkip = (_req, _res, next) => next();
+
+function asyncRoute(fn) {
+  return (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+}
 
 export function publicRouter(limit) {
   const router = Router();
@@ -12,84 +17,107 @@ export function publicRouter(limit) {
     res.json({ ok: true, service: 'glow-fit' });
   });
 
-  router.get('/settings', (_req, res) => {
-    res.json(getSettings());
-  });
+  router.get(
+    '/settings',
+    asyncRoute(async (_req, res) => {
+      res.json(await getSettings());
+    })
+  );
 
-  router.get('/colors', (_req, res) => {
-    res.json(listColors());
-  });
+  router.get(
+    '/colors',
+    asyncRoute(async (_req, res) => {
+      res.json(await listColors());
+    })
+  );
 
-  router.get('/products', (_req, res) => {
-    res.json(listProducts({ activeOnly: true }));
-  });
+  router.get(
+    '/products',
+    asyncRoute(async (_req, res) => {
+      res.json(await listProducts({ activeOnly: true }));
+    })
+  );
 
-  router.get('/products/:slug', (req, res) => {
-    const product = getProductBySlug(req.params.slug);
-    if (!product) return res.status(404).json({ error: 'Product not found' });
-    res.json(product);
-  });
+  router.get(
+    '/products/:slug',
+    asyncRoute(async (req, res) => {
+      const product = await getProductBySlug(req.params.slug);
+      if (!product) return res.status(404).json({ error: 'Product not found' });
+      res.json(product);
+    })
+  );
 
-  router.post('/orders', writeLimit, (req, res) => {
-    const { errors, data } = orderPayload(req.body || {});
-    if (!data.product_name) {
-      const product = getProductBySlug(data.product_slug, { includeInactive: true });
-      if (product) {
-        data.product_name = product.name;
-        data.product_image = data.product_image || product.image;
-        data.price = data.price >= 0 ? data.price : product.price;
-        data.total = data.qty * data.price;
+  router.post(
+    '/orders',
+    writeLimit,
+    asyncRoute(async (req, res) => {
+      const { errors, data } = orderPayload(req.body || {});
+      if (!data.product_name) {
+        const product = await getProductBySlug(data.product_slug, { includeInactive: true });
+        if (product) {
+          data.product_name = product.name;
+          data.product_image = data.product_image || product.image;
+          data.price = data.price >= 0 ? data.price : product.price;
+          data.total = data.qty * data.price;
+        }
       }
-    }
-    if (!data.product_name) errors.push('Product is required');
-    if (errors.length) return res.status(400).json({ error: errors[0], errors });
+      if (!data.product_name) errors.push('Product is required');
+      if (errors.length) return res.status(400).json({ error: errors[0], errors });
 
-    const result = db
-      .prepare(
-        `INSERT INTO orders (
-          status, customer_name, customer_phone, customer_city, notes,
-          product_slug, product_name, product_image, color_id, color_name, color_hex,
-          fit, size, qty, price, total, measurements, created_at, updated_at
-        ) VALUES ('new', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-      )
-      .run(
-        data.customer_name,
-        data.customer_phone,
-        data.customer_city,
-        data.notes,
-        data.product_slug,
-        data.product_name,
-        data.product_image,
-        data.color_id,
-        data.color_name,
-        data.color_hex,
-        data.fit,
-        data.size,
-        data.qty,
-        data.price,
-        data.total,
-        data.measurements,
-        now(),
-        now()
-      );
+      let measurements = {};
+      try {
+        measurements = JSON.parse(data.measurements || '{}');
+      } catch {
+        measurements = {};
+      }
 
-    res.status(201).json({
-      id: result.lastInsertRowid,
-      status: 'new',
-      total: data.total
-    });
-  });
+      const id = await nextId('orders');
+      await Order.create({
+        id,
+        status: 'new',
+        customerName: data.customer_name,
+        customerPhone: data.customer_phone,
+        customerCity: data.customer_city,
+        notes: data.notes,
+        productSlug: data.product_slug,
+        productName: data.product_name,
+        productImage: data.product_image,
+        colorId: data.color_id,
+        colorName: data.color_name,
+        colorHex: data.color_hex,
+        fit: data.fit,
+        size: data.size,
+        qty: data.qty,
+        price: data.price,
+        total: data.total,
+        measurements,
+        createdAt: now(),
+        updatedAt: now()
+      });
 
-  router.post('/inquiries', writeLimit, (req, res) => {
-    const { errors, data } = inquiryPayload(req.body || {});
-    if (errors.length) return res.status(400).json({ error: errors[0], errors });
-    const result = db
-      .prepare(
-        'INSERT INTO inquiries (name, phone, college, message, status, created_at) VALUES (?, ?, ?, ?, ?, ?)'
-      )
-      .run(data.name, data.phone, data.college, data.message, 'new', now());
-    res.status(201).json({ id: result.lastInsertRowid, status: 'new' });
-  });
+      res.status(201).json({ id, status: 'new', total: data.total });
+    })
+  );
+
+  router.post(
+    '/inquiries',
+    writeLimit,
+    asyncRoute(async (req, res) => {
+      const { errors, data } = inquiryPayload(req.body || {});
+      if (errors.length) return res.status(400).json({ error: errors[0], errors });
+      const id = await nextId('inquiries');
+      await Inquiry.create({
+        id,
+        name: data.name,
+        phone: data.phone,
+        college: data.college,
+        message: data.message,
+        status: 'new',
+        createdAt: now()
+      });
+      res.status(201).json({ id, status: 'new' });
+    })
+  );
 
   return router;
 }

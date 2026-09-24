@@ -1,136 +1,42 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import Database from 'better-sqlite3';
+import mongoose from 'mongoose';
+import { Color, Counter, Product, Settings } from './models.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const dataDir = path.join(root, 'data');
-const uploadsDir = path.join(dataDir, 'uploads');
 
 export const ROOT = root;
-export const DATA_DIR = dataDir;
-export const UPLOADS_DIR = uploadsDir;
-
-fs.mkdirSync(uploadsDir, { recursive: true });
-
-export const db = new Database(path.join(dataDir, 'glowfit.db'));
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
 
 export function now() {
   return new Date().toISOString();
 }
 
-export function migrate() {
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS admins (
-      id INTEGER PRIMARY KEY,
-      email TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      created_at TEXT NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS settings (
-      key TEXT PRIMARY KEY,
-      value TEXT NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS colors (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      hex TEXT NOT NULL,
-      sort_order INTEGER NOT NULL DEFAULT 0
-    );
-
-    CREATE TABLE IF NOT EXISTS products (
-      id INTEGER PRIMARY KEY,
-      slug TEXT UNIQUE NOT NULL,
-      name TEXT NOT NULL,
-      category TEXT NOT NULL,
-      category_label TEXT NOT NULL,
-      tag TEXT,
-      summary TEXT,
-      blurb TEXT,
-      details TEXT,
-      price INTEGER NOT NULL,
-      featured INTEGER NOT NULL DEFAULT 0,
-      image TEXT NOT NULL,
-      sizes TEXT NOT NULL,
-      sort_order INTEGER NOT NULL DEFAULT 0,
-      active INTEGER NOT NULL DEFAULT 1,
-      created_at TEXT NOT NULL,
-      updated_at TEXT NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS product_colors (
-      product_id INTEGER NOT NULL,
-      color_id TEXT NOT NULL,
-      PRIMARY KEY (product_id, color_id),
-      FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-      FOREIGN KEY (color_id) REFERENCES colors(id) ON DELETE CASCADE
-    );
-
-    CREATE TABLE IF NOT EXISTS orders (
-      id INTEGER PRIMARY KEY,
-      status TEXT NOT NULL DEFAULT 'new',
-      customer_name TEXT NOT NULL,
-      customer_phone TEXT NOT NULL,
-      customer_city TEXT,
-      notes TEXT,
-      product_slug TEXT,
-      product_name TEXT,
-      product_image TEXT,
-      color_id TEXT,
-      color_name TEXT,
-      color_hex TEXT,
-      fit TEXT,
-      size TEXT,
-      qty INTEGER NOT NULL,
-      price INTEGER NOT NULL,
-      total INTEGER NOT NULL,
-      measurements TEXT,
-      created_at TEXT NOT NULL,
-      updated_at TEXT NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS inquiries (
-      id INTEGER PRIMARY KEY,
-      name TEXT NOT NULL,
-      phone TEXT NOT NULL,
-      college TEXT,
-      message TEXT NOT NULL,
-      status TEXT NOT NULL DEFAULT 'new',
-      created_at TEXT NOT NULL
-    );
-  `);
+export async function nextId(name) {
+  const doc = await Counter.findByIdAndUpdate(name, { $inc: { seq: 1 } }, { new: true, upsert: true });
+  return doc.seq;
 }
 
-export function getSettings() {
-  const rows = db.prepare('SELECT key, value FROM settings').all();
-  const out = {};
-  for (const row of rows) out[row.key] = row.value;
-  return out;
+export async function connectDb() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error('Set MONGODB_URI to your MongoDB Atlas connection string');
+  }
+  if (mongoose.connection.readyState === 1) return mongoose.connection;
+  mongoose.set('strictQuery', true);
+  await mongoose.connect(uri, { serverSelectionTimeoutMS: 8000 });
+  return mongoose.connection;
 }
 
-export function setSettings(patch) {
-  const upsert = db.prepare('INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value');
-  const tx = db.transaction((entries) => {
-    for (const [key, value] of entries) upsert.run(key, String(value ?? ''));
-  });
-  tx(Object.entries(patch));
+export async function getSettings() {
+  const row = await Settings.findById('site').lean();
+  if (!row) return {};
+  const { _id, __v, ...rest } = row;
+  return rest;
+}
+
+export async function setSettings(patch) {
+  await Settings.findByIdAndUpdate('site', { $set: patch }, { upsert: true, new: true });
   return getSettings();
-}
-
-export function colorsForProduct(productId) {
-  return db
-    .prepare(
-      `SELECT c.id, c.name, c.hex
-       FROM product_colors pc
-       JOIN colors c ON c.id = pc.color_id
-       WHERE pc.product_id = ?
-       ORDER BY c.sort_order, c.name`
-    )
-    .all(productId);
 }
 
 export function toProduct(row, { includeInactive = false } = {}) {
@@ -141,7 +47,7 @@ export function toProduct(row, { includeInactive = false } = {}) {
     slug: row.slug,
     name: row.name,
     category: row.category,
-    categoryLabel: row.category_label,
+    categoryLabel: row.categoryLabel,
     tag: row.tag || '',
     summary: row.summary || '',
     blurb: row.blurb || '',
@@ -149,28 +55,45 @@ export function toProduct(row, { includeInactive = false } = {}) {
     price: row.price,
     featured: Boolean(row.featured),
     image: row.image,
-    sizes: JSON.parse(row.sizes || '[]'),
-    colors: colorsForProduct(row.id),
-    sortOrder: row.sort_order,
+    sizes: row.sizes || [],
+    colors: row.colors || [],
+    sortOrder: row.sortOrder,
     active: Boolean(row.active)
   };
 }
 
-export function listProducts({ activeOnly = true } = {}) {
-  const sql = activeOnly
-    ? 'SELECT * FROM products WHERE active = 1 ORDER BY featured DESC, sort_order, name'
-    : 'SELECT * FROM products ORDER BY sort_order, name';
-  return db.prepare(sql).all().map((row) => toProduct(row, { includeInactive: !activeOnly }));
+async function withColors(product) {
+  if (!product) return null;
+  const colors = await Color.find({ id: { $in: product.colorIds || [] } })
+    .sort({ sortOrder: 1, name: 1 })
+    .lean();
+  const byId = new Map(colors.map((c) => [c.id, { id: c.id, name: c.name, hex: c.hex }]));
+  return toProduct(
+    {
+      ...product,
+      colors: (product.colorIds || []).map((id) => byId.get(id)).filter(Boolean)
+    },
+    { includeInactive: true }
+  );
 }
 
-export function getProductBySlug(slug, { includeInactive = false } = {}) {
-  return toProduct(db.prepare('SELECT * FROM products WHERE slug = ?').get(slug), { includeInactive });
+export async function listProducts({ activeOnly = true } = {}) {
+  const query = activeOnly ? { active: true } : {};
+  const rows = await Product.find(query).sort({ featured: -1, sortOrder: 1, name: 1 }).lean();
+  return Promise.all(rows.map((row) => withColors(row)));
 }
 
-export function getProductById(id, { includeInactive = true } = {}) {
-  return toProduct(db.prepare('SELECT * FROM products WHERE id = ?').get(id), { includeInactive });
+export async function getProductBySlug(slug, { includeInactive = false } = {}) {
+  const row = await Product.findOne(includeInactive ? { slug } : { slug, active: true }).lean();
+  const product = await withColors(row);
+  return includeInactive ? product : toProduct(product, { includeInactive: false });
 }
 
-export function listColors() {
-  return db.prepare('SELECT id, name, hex, sort_order AS sortOrder FROM colors ORDER BY sort_order, name').all();
+export async function getProductById(id) {
+  return withColors(await Product.findOne({ id: Number(id) }).lean());
+}
+
+export async function listColors() {
+  const rows = await Color.find().sort({ sortOrder: 1, name: 1 }).lean();
+  return rows.map((c) => ({ id: c.id, name: c.name, hex: c.hex, sortOrder: c.sortOrder }));
 }

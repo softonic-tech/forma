@@ -14,13 +14,32 @@ npm run dev
 - Admin: http://127.0.0.1:5173/admin
 - Default admin: `admin@glowfit.pk` / `GlowFit!Admin`
 
-Change those values in `.env` before anyone else uses the site.
+Set `MONGODB_URI` to a MongoDB Atlas database. The first start creates the admin user, colours, and catalog.
 
-## Production
+Change `JWT_SECRET` and `ADMIN_PASSWORD` before anyone else uses the site.
 
-1. Set a long `JWT_SECRET`, a strong `ADMIN_PASSWORD`, and `APP_URL` to the public site URL.
-2. `NODE_ENV=production`
-3. Build and start:
+## Vercel
+
+1. Create a free cluster at [MongoDB Atlas](https://www.mongodb.com/atlas).
+2. Allow access from anywhere (`0.0.0.0/0`) or from Vercel IPs.
+3. Add these environment variables in the Vercel project:
+
+- `MONGODB_URI`
+- `JWT_SECRET` (16+ characters)
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD`
+- `APP_URL` (your Vercel URL, e.g. `https://your-app.vercel.app`)
+- `NODE_ENV=production`
+- `AWS_REGION`
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_S3_BUCKET_NAME`
+
+Product images uploaded in admin are stored in that S3 bucket under `glowfit/`. The bucket needs public read so the shop can show them.
+
+4. Redeploy. `/admin`, `/shop`, and the API then share that MongoDB database.
+
+## VPS / Railway / Render
 
 ```bash
 npm run build
@@ -28,7 +47,3 @@ npm start
 ```
 
 The API serves the built shop and admin from `dist/` on `PORT` (3000 by default). Put nginx or Caddy in front for HTTPS.
-
-SQLite lives in `data/glowfit.db`. Uploaded product images live in `data/uploads`.
-
-Vercel can host the shop as a static site (`vercel.json` sends `/admin`, `/shop`, and other routes to the React app). It does **not** run the Express + SQLite API, so admin login, orders, and uploads will fail there. For a working admin panel, deploy with `npm run build && npm start` on a Node host that keeps the `data/` folder (Railway, Render, a VPS).
