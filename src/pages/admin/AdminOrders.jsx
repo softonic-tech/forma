@@ -62,24 +62,24 @@ export default function AdminOrders() {
           <tbody>
             {orders.map((order) => (
               <tr key={order.id}>
-                <td>#{order.id}</td>
-                <td>
+                <td data-label="ID">#{order.id}</td>
+                <td data-label="Customer">
                   {order.customerName}
                   <br />
                   {order.customerPhone}
                   {order.customerCity ? <><br />{order.customerCity}</> : null}
                 </td>
-                <td>
+                <td data-label="Item">
                   {order.productName}
                   <br />
                   {order.colorName} · qty {order.qty}
                 </td>
-                <td>
+                <td data-label="Fit">
                   {order.fit === 'custom' ? 'Custom' : order.size}
                   {order.notes ? <><br />{order.notes}</> : null}
                 </td>
-                <td>{formatPrice(order.total)}</td>
-                <td>
+                <td data-label="Total">{formatPrice(order.total)}</td>
+                <td data-label="Status">
                   <select value={order.status} onChange={(e) => setStatus(order.id, e.target.value)}>
                     {STATUSES.map((s) => (
                       <option key={s} value={s}>

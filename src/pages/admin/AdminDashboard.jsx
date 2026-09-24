@@ -61,11 +61,11 @@ export default function AdminDashboard() {
           <tbody>
             {stats.recent.map((row) => (
               <tr key={row.id}>
-                <td>#{row.id}</td>
-                <td>{row.customer_name}</td>
-                <td>{row.product_name}</td>
-                <td>{formatPrice(row.total)}</td>
-                <td>
+                <td data-label="ID">#{row.id}</td>
+                <td data-label="Customer">{row.customer_name}</td>
+                <td data-label="Item">{row.product_name}</td>
+                <td data-label="Total">{formatPrice(row.total)}</td>
+                <td data-label="Status">
                   <span className={'admin-badge ' + row.status}>{row.status}</span>
                 </td>
               </tr>

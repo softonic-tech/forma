@@ -45,15 +45,15 @@ export default function AdminInquiries() {
           <tbody>
             {rows.map((row) => (
               <tr key={row.id}>
-                <td>{new Date(row.created_at).toLocaleString()}</td>
-                <td>
+                <td data-label="When">{new Date(row.created_at).toLocaleString()}</td>
+                <td data-label="From">
                   {row.name}
                   <br />
                   {row.phone}
                   {row.college ? <><br />{row.college}</> : null}
                 </td>
-                <td>{row.message}</td>
-                <td>
+                <td data-label="Message">{row.message}</td>
+                <td data-label="Status">
                   <select value={row.status} onChange={(e) => setStatus(row.id, e.target.value)}>
                     <option value="new">new</option>
                     <option value="read">read</option>
