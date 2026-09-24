@@ -1,11 +1,12 @@
 {
   "functions": {
-    "api/[...path].js": {
+    "api/index.js": {
       "includeFiles": "{server/**,src/data/**}"
     }
   },
   "rewrites": [
-    { "source": "/uploads/:file", "destination": "/api/uploads/:file" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/api/:path*", "destination": "/api/index" },
+    { "source": "/uploads/:path*", "destination": "/api/index" },
+    { "source": "/((?!api/|uploads/).*)", "destination": "/index.html" }
   ]
 }
