@@ -30,3 +30,5 @@ npm start
 The API serves the built shop and admin from `dist/` on `PORT` (3000 by default). Put nginx or Caddy in front for HTTPS.
 
 SQLite lives in `data/glowfit.db`. Uploaded product images live in `data/uploads`.
+
+Vercel can host the shop as a static site (`vercel.json` sends `/admin`, `/shop`, and other routes to the React app). It does **not** run the Express + SQLite API, so admin login, orders, and uploads will fail there. For a working admin panel, deploy with `npm run build && npm start` on a Node host that keeps the `data/` folder (Railway, Render, a VPS).
