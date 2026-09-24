@@ -3,17 +3,21 @@ import { Link, useNavigate } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import Layout from '../components/Layout.jsx';
 import { useOrder } from '../context/OrderContext.jsx';
-import { config } from '../data/config.js';
+import { useStore } from '../context/StoreContext.jsx';
+import { api } from '../lib/api.js';
 import { formatPrice, whatsappUrl } from '../lib/format.js';
 
 export default function Checkout() {
   const { order, clearOrder } = useOrder();
+  const { settings } = useStore();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', phone: '', city: '', notes: '' });
+  const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   useEffect(() => {
-    document.title = 'Checkout | FORMA';
-  }, []);
+    document.title = 'Checkout | ' + settings.brandName;
+  }, [settings]);
 
   function onChange(e) {
     const { name, value } = e.target;
@@ -49,10 +53,12 @@ export default function Checkout() {
   const fitLine = order.fit === 'custom' ? 'Custom measurements · 1 piece' : 'Size ' + order.size + ' · Qty ' + order.qty;
   const m = order.measurements || {};
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
+    setSubmitError('');
+    setSaving(true);
     const lines = [
-      'New order from the ' + (config.brandName || 'FORMA') + ' website',
+      'New order from the ' + settings.brandName + ' website',
       '',
       'Name: ' + form.name.trim(),
       'Phone: ' + form.phone.trim()
@@ -77,8 +83,33 @@ export default function Checkout() {
       if (m.notes) lines.push('Notes: ' + m.notes);
     }
     if (form.notes.trim()) lines.push('', form.notes.trim());
-    clearOrder();
-    window.location.href = whatsappUrl(lines.join('\n'));
+    try {
+      await api('/api/orders', {
+        method: 'POST',
+        body: {
+          name: form.name,
+          phone: form.phone,
+          city: form.city,
+          notes: form.notes,
+          productSlug: order.slug,
+          productName: order.name,
+          productImage: order.image,
+          colorId: order.colorId,
+          colorName: order.colorName,
+          colorHex: order.colorHex,
+          fit: order.fit,
+          size: order.size,
+          qty: order.qty,
+          price: order.price,
+          measurements: order.measurements
+        }
+      });
+      clearOrder();
+      window.location.href = whatsappUrl(lines.join('\n'), settings);
+    } catch (err) {
+      setSubmitError(err.message || 'Could not save this order. Try again.');
+      setSaving(false);
+    }
   }
 
   return (
@@ -175,8 +206,9 @@ export default function Checkout() {
                   onChange={onChange}
                 />
               </div>
-              <button type="submit" className="button dark">
-                Place order on WhatsApp <Icon name="whatsapp" />
+              {submitError ? <p className="form-error">{submitError}</p> : null}
+              <button type="submit" className="button dark" disabled={saving}>
+                {saving ? 'Saving order…' : 'Place order on WhatsApp'} <Icon name="whatsapp" />
               </button>
             </form>
           </div>

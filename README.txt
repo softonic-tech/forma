@@ -1,9 +1,12 @@
-FORMA — React + Vite
+Glow Fit Scrubs — React storefront + Node admin API
 
+cp .env.example .env
 npm install
 npm run dev
 
-Open the local URL Vite prints (usually http://localhost:5173).
-The CSS in src/styles.css is unchanged from the static site.
-Assets live in public/assets.
-A Node backend can be added later; the current app is frontend only.
+Shop: http://127.0.0.1:5173
+Admin: http://127.0.0.1:5173/admin
+Default login: admin@glowfit.pk / GlowFit!Admin
+
+Production: set JWT_SECRET and ADMIN_PASSWORD, then
+npm run build && npm start

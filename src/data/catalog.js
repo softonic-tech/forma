@@ -1,11 +1,10 @@
 export const COLORS = [
-  { id: 'navy', name: 'Navy', hex: '#173043' },
-  { id: 'steel', name: 'Steel', hex: '#89a6b9' },
-  { id: 'teal', name: 'Teal', hex: '#426e72' },
-  { id: 'burgundy', name: 'Burgundy', hex: '#714855' },
-  { id: 'charcoal', name: 'Charcoal', hex: '#586068' },
-  { id: 'ceil', name: 'Ceil', hex: '#7a9eb0' },
-  { id: 'wine', name: 'Wine', hex: '#5c3d4a' }
+  { id: 'navy', name: 'Navy', hex: '#0a2348' },
+  { id: 'teal', name: 'Teal', hex: '#0e7a86' },
+  { id: 'black', name: 'Black', hex: '#1a1c1e' },
+  { id: 'grey', name: 'Grey', hex: '#8b9096' },
+  { id: 'burgundy', name: 'Burgundy', hex: '#6b2c3a' },
+  { id: 'olive', name: 'Olive', hex: '#4d5538' }
 ];
 
 export const CATALOG = [
@@ -14,48 +13,48 @@ export const CATALOG = [
     name: 'The Everyday Essential',
     category: 'set',
     categoryLabel: 'For him',
-    tag: 'THE ESSENTIALS',
-    summary: 'Clean lines. An easy, everyday fit.',
+    tag: 'PREMIUM SET',
+    summary: 'Modern design. A fit that moves with you.',
     price: 4900,
     featured: true,
     image: '/assets/men-transparent.png',
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     colors: COLORS,
-    blurb: 'The everyday set for long days. A stretch top and cargo pant, cut to move through lectures, labs, and twelve-hour wards.',
+    blurb: 'Premium quality scrubs for long days. A stretch top and cargo pant — breathable, soft, and cut to move through lectures, labs, and twelve-hour wards.',
     details:
-      'Soft-matte stretch-woven fabric that holds its colour through repeated washing. Chest patch pocket, pen pocket, hip pockets on the top; elastic waist, drawstring, and cargo pockets on the pant. Sold as a matching set.'
+      'Stretchable, lightweight fabric that stays breathable through a full shift and holds colour in the wash. Chest patch pocket, pen pocket, and hip pockets on the top; elastic waist, drawstring, and cargo pockets on the pant. Sold as a matching set.'
   },
   {
     slug: 'comfort-considered',
     name: 'Comfort, Considered',
     category: 'set',
     categoryLabel: 'For her',
-    tag: 'COMFORT, CONSIDERED',
-    summary: 'Thoughtful coverage. Room to move.',
+    tag: 'PREMIUM SET',
+    summary: 'Stylish look. Professional feel.',
     price: 4900,
     featured: true,
     image: '/assets/women-transparent.png',
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     colors: COLORS,
-    blurb: 'Thoughtful coverage with room to move. Shaped closer through the waist and hip so it sits cleanly under a coat or ID lanyard.',
+    blurb: 'Thoughtful coverage with room to move. Soft, lightweight cloth shaped closer through the waist so it sits cleanly under a coat or ID lanyard.',
     details:
-      'Women’s fit: slightly narrower shoulder, shaped waist, and a rise cut for a closer silhouette without losing pocket space. Same stretch-woven cloth and pocket layout as the everyday set.'
+      'Women’s fit: slightly narrower shoulder, shaped waist, and a rise cut for a closer silhouette without losing pocket space. Same breathable stretch fabric and pocket layout as the everyday set.'
   },
   {
     slug: 'campus-classic',
     name: 'The Campus Classic',
     category: 'set',
     categoryLabel: 'Unisex set',
-    tag: 'CAMPUS SET',
-    summary: 'A straightforward set for lectures and labs.',
+    tag: 'UNISEX FIT',
+    summary: 'One modern look for lectures and labs.',
     price: 4700,
     featured: false,
     image: '/assets/men-transparent.png',
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     colors: COLORS,
-    blurb: 'A clean unisex set for school and college days. Same cloth and pockets as the everyday line, cut for an easy shared fit.',
+    blurb: 'A clean unisex set for school and college days. Same stretch cloth and pockets as the everyday line, cut for an easy shared fit.',
     details:
-      'V-neck top and drawstring cargo pant in stretch-woven cloth. Built for mixed groups who want one look without a gendered cut.'
+      'V-neck top and drawstring cargo pant in breathable stretch fabric. Built for mixed groups who want one professional look without a gendered cut.'
   },
   {
     slug: 'modest-tunic-set',
@@ -69,9 +68,9 @@ export const CATALOG = [
     image: '/assets/women-transparent.png',
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     colors: COLORS,
-    blurb: 'A longer tunic top and matching pant for days that ask for more coverage, without losing room to move.',
+    blurb: 'A longer tunic top and matching pant for days that ask for more coverage, without losing stretch or breathability.',
     details:
-      'Tunic-length top with hip pockets and a pen slot, paired with a drawstring cargo pant. Same stretch-woven cloth as the rest of the line.'
+      'Tunic-length top with hip pockets and a pen slot, paired with a drawstring cargo pant. Same soft, washable stretch cloth as the rest of the line.'
   },
   {
     slug: 'stretch-scrub-top',
@@ -87,7 +86,7 @@ export const CATALOG = [
     colors: COLORS,
     blurb: 'V-neck top with a chest pocket and pen slot. Mix it with any pant, or replace a worn set piece without buying the pair again.',
     details:
-      'Short-sleeve V-neck in stretch-woven cloth. Chest patch pocket, pen pocket on the wearer’s left, slanted hip pockets. Pair with the cargo pant or wear over college-issued bottoms.'
+      'Short-sleeve V-neck in stretchable, lightweight fabric. Chest patch pocket, pen pocket on the wearer’s left, slanted hip pockets. Pair with the cargo pant or wear over college-issued bottoms.'
   },
   {
     slug: 'cargo-scrub-pant',
@@ -95,13 +94,13 @@ export const CATALOG = [
     category: 'pants',
     categoryLabel: 'Pants',
     tag: 'SINGLE PIECE',
-    summary: 'A drawstring cargo built for long rounds.',
+    summary: 'Cargo pockets built for long rounds.',
     price: 2400,
     featured: false,
     image: '/assets/women-transparent.png',
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     colors: COLORS,
-    blurb: 'Drawstring cargo pant with a soft elastic waist. Built for standing lectures and long rounds.',
+    blurb: 'Drawstring cargo pant with a soft elastic waist. Multiple pockets, easy to wash, built for standing lectures and long rounds.',
     details:
       'Elastic waistband with a front drawstring, slanted hand pockets, and a flapped cargo pocket on each thigh. Inseam cut to sit above the shoe — no pooling, no dragging on ward floors.'
   },

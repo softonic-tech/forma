@@ -4,14 +4,15 @@ import Icon from '../components/Icon.jsx';
 import Layout from '../components/Layout.jsx';
 import Marquee from '../components/Marquee.jsx';
 import ProductCard from '../components/ProductCard.jsx';
-import { CATALOG } from '../data/catalog.js';
+import { useStore } from '../context/StoreContext.jsx';
 
 export default function Home() {
-  const featured = CATALOG.filter((p) => p.featured).slice(0, 2);
+  const { products, colors, settings } = useStore();
+  const featured = products.filter((p) => p.featured).slice(0, 2);
 
   useEffect(() => {
-    document.title = 'FORMA | Made for your every day.';
-  }, []);
+    document.title = settings.brandName + ' | ' + settings.tagline;
+  }, [settings]);
 
   return (
     <Layout isHome>
@@ -20,44 +21,44 @@ export default function Home() {
           <div className="hero">
             <div className="opening-scene">
               <div className="hero-models">
-                <img className="hero-model hero-model-man" src="/assets/men-transparent.png" alt="Male model wearing navy scrubs" />
-                <img className="hero-model hero-model-woman" src="/assets/women-transparent.png" alt="Female model wearing modest steel-blue scrubs and navy hijab" />
+                <img className="hero-model hero-model-man" src="/assets/men-transparent.png" alt="Male model wearing navy Glow Fit scrubs" />
+                <img className="hero-model hero-model-woman" src="/assets/women-transparent.png" alt="Female model wearing teal Glow Fit scrubs" />
               </div>
               <div className="hero-shade"></div>
               <div className="hero-copy">
                 <p className="eyebrow">
-                  <span className="line"></span> PURPOSE IN EVERY THREAD
+                  <span className="line"></span> COMFORT THAT MOVES WITH YOU
                 </p>
                 <h1 id="hero-title">
-                  Made for
+                  Premium
                   <br />
-                  your <em>every</em>
+                  quality. <em>Perfect</em>
                   <br />
-                  day.
+                  fit.
                 </h1>
-                <p className="hero-description">Scrubs that move with you. Uniforms that bring you together. Made to fit your world.</p>
+                <p className="hero-description">Breathable, stretchable scrubs with a stylish look and a professional feel. Made for your every shift.</p>
                 <Link className="button dark" to="/shop">
                   Find your fit <Icon name="arrowUpRight" />
                 </Link>
-                <div className="hero-note">FOR HIM. FOR HER. FOR YOUR WHOLE TEAM.</div>
+                <div className="hero-note">STYLISH LOOK. PROFESSIONAL FEEL.</div>
               </div>
             </div>
             <div className="film-scene scene-men">
               <span className="scene-word" aria-hidden="true">
                 move.
               </span>
-              <img src="/assets/men-transparent.png" alt="Navy scrub set moving into view" />
+              <img src="/assets/men-transparent.png" alt="Navy Glow Fit scrub set moving into view" />
               <div className="scene-copy">
-                <p className="eyebrow">01 / THE EVERYDAY ESSENTIAL</p>
+                <p className="eyebrow">01 / STRETCHABLE & FLEXIBLE</p>
                 <h2>
                   Move with
                   <br />
-                  <em>purpose.</em>
+                  <em>comfort.</em>
                 </h2>
                 <p>
-                  Your day. Your pace.
+                  Soft, lightweight cloth
                   <br />
-                  A fit that feels like you.
+                  that keeps up with you.
                 </p>
                 <Link className="button dark" to="/product/everyday-essential">
                   Explore his fit <Icon name="arrowUpRight" />
@@ -68,18 +69,18 @@ export default function Home() {
               <span className="scene-word" aria-hidden="true">
                 feel.
               </span>
-              <img src="/assets/women-transparent.png" alt="Modest blue scrub set moving into view" />
+              <img src="/assets/women-transparent.png" alt="Teal Glow Fit scrub set moving into view" />
               <div className="scene-copy">
-                <p className="eyebrow">02 / COMFORT, CONSIDERED</p>
+                <p className="eyebrow">02 / STYLISH LOOK</p>
                 <h2>
-                  Feel good.
+                  Professional
                   <br />
-                  <em>Do great.</em>
+                  <em>feel.</em>
                 </h2>
                 <p>
-                  Thoughtful coverage.
+                  Modern design.
                   <br />
-                  Made for your every day.
+                  Made to last, made for you.
                 </p>
                 <Link className="button dark" to="/product/comfort-considered">
                   Explore her fit <Icon name="arrowUpRight" />
@@ -101,7 +102,7 @@ export default function Home() {
               <span></span>
             </div>
             <div className="hero-bottom">
-              <span>01 / THE EVERYDAY COLLECTION</span>
+              <span>01 / PREMIUM QUALITY SCRUBS</span>
               <a href="#collection">
                 SCROLL TO EXPLORE <Icon name="arrowDown" />
               </a>
@@ -111,19 +112,27 @@ export default function Home() {
         </section>
         <Marquee className="benefits">
           <span>
-            <Icon name="layers" /> Single pieces & bulk orders
+            <Icon name="breath" /> Breathable fabric
           </span>
           <i>+</i>
           <span>
-            <Icon name="ruler" /> Your size. Your measurements.
+            <Icon name="stretch" /> Stretchable & flexible
           </span>
           <i>+</i>
           <span>
-            <Icon name="palette" /> Colours that feel like you
+            <Icon name="feather" /> Soft & lightweight
           </span>
           <i>+</i>
           <span>
-            <Icon name="users" /> For men & women
+            <Icon name="wash" /> Easy to wash & durable
+          </span>
+          <i>+</i>
+          <span>
+            <Icon name="users" /> Unisex fit
+          </span>
+          <i>+</i>
+          <span>
+            <Icon name="pocket" /> Multiple pockets
           </span>
           <i>+</i>
         </Marquee>
@@ -132,20 +141,21 @@ export default function Home() {
             <div>
               <p className="eyebrow">01 / THE EVERYDAY COLLECTION</p>
               <h2>
-                Good fit.
+                Perfect fit.
                 <br />
-                <em>Great feeling.</em>
+                <em>Everyday comfort.</em>
               </h2>
             </div>
             <p>
-              For your first day on campus and every shift after.
+              Premium quality scrubs for your first day on campus and every shift after.
               <br />
               Pick a colour and quantity, or enter measurements for one piece.
             </p>
           </div>
           <div className="collection-grid">{featured.map((product) => <ProductCard key={product.slug} product={product} />)}</div>
           <p className="page-note">
-            Tops, pants, and every colour.             <Link to="/shop">
+            Tops, pants, and every colour.{' '}
+            <Link to="/shop">
               See the full collection <Icon name="arrowUpRight" />
             </Link>
             {' '}&nbsp;·&nbsp;{' '}
@@ -156,13 +166,13 @@ export default function Home() {
         </section>
         <section className="custom section" id="custom">
           <div className="custom-title">
-            <p className="eyebrow">02 / PERSONALLY YOURS</p>
+            <p className="eyebrow">02 / MADE TO LAST, MADE FOR YOU</p>
             <h2>
               Not just a size.
               <br />
               <em>Your fit.</em>
             </h2>
-            <p>We cut for the hours you actually live in uniform — lectures, rounds, the walk between buildings, and the wash that follows.</p>
+            <p>Glow Fit scrubs are cut for the hours you actually live in uniform — lectures, rounds, the walk between buildings, and the wash that follows.</p>
             <Link className="button dark" to="/about">
               Our story <Icon name="arrowUpRight" />
             </Link>
@@ -171,36 +181,34 @@ export default function Home() {
             <article>
               <span>01</span>
               <div>
-                <h3>A fit that’s yours</h3>
-                <p>Custom sizing and measurements for men and women, so a single piece or a whole team can feel considered.</p>
+                <h3>Breathable, stretchable cloth</h3>
+                <p>Soft, lightweight fabric that flexes with you and stays comfortable through a long shift.</p>
               </div>
             </article>
             <article>
               <span>02</span>
               <div>
                 <h3>Your colour, your identity</h3>
-                <p>Coordinate with your school, college or personal style. Navy, steel, teal and custom colourways on request.</p>
-                <div className="colour-palette" aria-label="Colour inspiration: navy, steel blue, teal, burgundy and charcoal">
-                  <i></i>
-                  <i></i>
-                  <i></i>
-                  <i></i>
-                  <i></i>
+                <p>Navy, teal, black, grey, burgundy, and olive — plus custom colourways on request for schools and colleges.</p>
+                <div className="colour-palette" aria-label="Available colours: navy, teal, black, grey, burgundy and olive">
+                  {colors.map((c) => (
+                    <i key={c.id} style={{ background: c.hex }} title={c.name} />
+                  ))}
                 </div>
               </div>
             </article>
             <article>
               <span>03</span>
               <div>
-                <h3>One piece. A whole team.</h3>
-                <p>The same approach whether you are ordering for yourself or outfitting a campus. We confirm every detail on WhatsApp before you pay.</p>
+                <h3>Modern design. Multiple pockets.</h3>
+                <p>Unisex and tailored fits, with the pockets you actually use. We confirm every order on WhatsApp before you pay.</p>
               </div>
             </article>
           </div>
         </section>
         <section className="bulk" id="bulk">
           <div className="bulk-top">
-            <span className="eyebrow">03 / BETTER TOGETHER</span>
+            <span className="eyebrow">03 / PREMIUM QUALITY SCRUBS</span>
             <span>PESHAWAR, PK</span>
           </div>
           <div className="bulk-content">
@@ -239,7 +247,7 @@ export default function Home() {
           <p>
             Have your preferred style, colours, measurements and quantity ready.
             <br />
-            Single-piece and institutional orders welcome.
+            Message {settings.whatsappName} on WhatsApp, or visit us in {settings.city}.
           </p>
           <div className="order-list">
             <span>

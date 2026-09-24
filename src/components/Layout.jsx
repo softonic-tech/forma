@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useOrder } from '../context/OrderContext.jsx';
+import { useStore } from '../context/StoreContext.jsx';
 import Icon from './Icon.jsx';
+import Logo from './Logo.jsx';
 import Marquee from './Marquee.jsx';
 
 export default function Layout({ children, isHome = false }) {
   const { qty } = useOrder();
+  const { settings } = useStore();
   const location = useLocation();
   const [navOpen, setNavOpen] = useState(false);
 
@@ -43,16 +46,16 @@ export default function Layout({ children, isHome = false }) {
     <>
       <div className="nav-backdrop" data-nav-backdrop hidden={!navOpen} onClick={closeNav} />
       <Marquee className="announcement">
-        <span>FROM ONE PERSON TO AN ENTIRE CAMPUS.</span>
+        <span>COMFORT THAT MOVES WITH YOU.</span>
+        <span>PREMIUM QUALITY · PERFECT FIT · EVERYDAY COMFORT.</span>
+        <span>STYLISH LOOK. PROFESSIONAL FEEL.</span>
         <span>MADE IN PESHAWAR, PAKISTAN.</span>
-        <span>SCRUBS & UNIFORMS.</span>
-        <span>FROM ONE PERSON TO AN ENTIRE CAMPUS.</span>
-        <span>MADE IN PESHAWAR, PAKISTAN.</span>
-        <span>SCRUBS & UNIFORMS.</span>
+        <span>COMFORT THAT MOVES WITH YOU.</span>
+        <span>PREMIUM QUALITY · PERFECT FIT · EVERYDAY COMFORT.</span>
       </Marquee>
       <header className="header">
-        <Link className="logo" to="/" aria-label="Forma home">
-          forma<span>®</span>
+        <Link className="logo" to="/" aria-label="Glow Fit Scrubs home">
+          <Logo />
         </Link>
         <nav className={navOpen ? 'nav-links is-open' : 'nav-links'} id="site-nav" aria-label="Main navigation">
           <NavLink to="/shop" onClick={closeNav}>
@@ -64,8 +67,8 @@ export default function Layout({ children, isHome = false }) {
             Made for you
           </NavLink>
           <NavLink to="/contact" onClick={closeNav}>
-            <Icon name="building" />
-            For institutions
+            <Icon name="phone" />
+            Get in touch
           </NavLink>
         </nav>
         <div className="header-end">
@@ -94,11 +97,11 @@ export default function Layout({ children, isHome = false }) {
       </header>
       {children}
       <footer>
-        <Link className="logo" to="/">
-          forma<span>®</span>
+        <Link className="logo" to="/" aria-label="Glow Fit Scrubs home">
+          <Logo />
         </Link>
-        <p>Made for your every day.</p>
-        <span>SCRUBS & UNIFORMS · PESHAWAR, PAKISTAN</span>
+        <p>{settings.tagline}.</p>
+        <span>PREMIUM SCRUBS · PESHAWAR, PAKISTAN</span>
         {isHome ? (
           <a
             href="#"
@@ -116,6 +119,12 @@ export default function Layout({ children, isHome = false }) {
           </Link>
         )}
       </footer>
+      {location.pathname === '/shop' || location.pathname === '/checkout' ? null : (
+        <Link className="button dark shop-now-btn" to="/shop">
+          Shop now
+          <Icon name="bag" />
+        </Link>
+      )}
     </>
   );
 }

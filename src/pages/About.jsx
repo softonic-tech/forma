@@ -2,11 +2,14 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import Layout from '../components/Layout.jsx';
+import { useStore } from '../context/StoreContext.jsx';
 
 export default function About() {
+  const { colors, settings } = useStore();
+
   useEffect(() => {
-    document.title = 'Made for you | FORMA';
-  }, []);
+    document.title = 'Made for you | ' + settings.brandName;
+  }, [settings]);
 
   return (
     <Layout>
@@ -15,7 +18,7 @@ export default function About() {
           <div className="section-heading">
             <div>
               <p className="eyebrow">
-                <span className="line"></span> 02 / PERSONALLY YOURS
+                <span className="line"></span> 02 / MADE TO LAST, MADE FOR YOU
               </p>
               <h1>
                 Not just a size.
@@ -24,7 +27,7 @@ export default function About() {
               </h1>
             </div>
             <p>
-              Scrubs that move with you. Uniforms that bring you together.
+              {settings.tagline}. {settings.promise}.
               <br />
               Made in Peshawar, for your every day.
             </p>
@@ -33,11 +36,11 @@ export default function About() {
 
         <section className="custom section">
           <div className="custom-title">
-            <p className="eyebrow">WHY FORMA</p>
+            <p className="eyebrow">WHY GLOW FIT</p>
             <h2>
-              Purpose in
+              Comfort that
               <br />
-              <em>every thread.</em>
+              <em>moves with you.</em>
             </h2>
             <p>We cut for the hours you actually live in uniform — lectures, rounds, the walk between buildings, and the wash that follows.</p>
             <Link className="button dark" to="/shop">
@@ -48,29 +51,27 @@ export default function About() {
             <article>
               <span>01</span>
               <div>
-                <h3>A fit that’s yours</h3>
-                <p>Custom sizing and measurements for men and women, so a single piece or a whole team can feel considered.</p>
+                <h3>Breathable, stretchable cloth</h3>
+                <p>Soft, lightweight fabric that flexes with you and stays comfortable through a long shift.</p>
               </div>
             </article>
             <article>
               <span>02</span>
               <div>
                 <h3>Your colour, your identity</h3>
-                <p>Coordinate with your school, college or personal style. Navy, steel, teal and custom colourways on request.</p>
-                <div className="colour-palette" aria-label="Colour inspiration: navy, steel blue, teal, burgundy and charcoal">
-                  <i></i>
-                  <i></i>
-                  <i></i>
-                  <i></i>
-                  <i></i>
+                <p>Navy, teal, black, grey, burgundy, and olive — plus custom colourways on request for schools and colleges.</p>
+                <div className="colour-palette" aria-label="Available colours: navy, teal, black, grey, burgundy and olive">
+                  {colors.map((c) => (
+                    <i key={c.id} style={{ background: c.hex }} title={c.name} />
+                  ))}
                 </div>
               </div>
             </article>
             <article>
               <span>03</span>
               <div>
-                <h3>One piece. A whole team.</h3>
-                <p>The same approach whether you are ordering for yourself or outfitting a campus. We confirm every detail on WhatsApp before you pay.</p>
+                <h3>Modern design. Multiple pockets.</h3>
+                <p>Unisex and tailored fits, with the pockets you actually use. We confirm every order on WhatsApp before you pay.</p>
               </div>
             </article>
           </div>
@@ -83,18 +84,18 @@ export default function About() {
           </div>
           <div className="bulk-content">
             <h2>
-              For him.
+              Stylish look.
               <br />
-              For her.
+              Professional feel.
               <br />
-              <em>For your team.</em>
+              <em>Made for you.</em>
             </h2>
             <div>
-              <p>FORMA is a small line on purpose — everyday scrubs and uniforms that survive a full rotation, not just a photograph.</p>
+              <p>Glow Fit is a small line on purpose — premium scrubs that survive a full rotation, not just a photograph.</p>
               <div className="bulk-tags">
-                <span>Schools & colleges</span>
-                <span>Group scrub orders</span>
-                <span>Custom measurements</span>
+                <span>Breathable fabric</span>
+                <span>Easy to wash</span>
+                <span>Unisex fit</span>
               </div>
             </div>
           </div>

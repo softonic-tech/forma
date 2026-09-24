@@ -1,31 +1,43 @@
 import { useEffect, useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import Layout from '../components/Layout.jsx';
-import { config } from '../data/config.js';
+import { useStore } from '../context/StoreContext.jsx';
+import { api } from '../lib/api.js';
 import { telHref, whatsappUrl } from '../lib/format.js';
 
 export default function Contact() {
+  const { settings } = useStore();
   const [form, setForm] = useState({ name: '', phone: '', college: '', message: '' });
+  const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   useEffect(() => {
-    document.title = 'For institutions | FORMA';
-  }, []);
+    document.title = 'Get in touch | ' + settings.brandName;
+  }, [settings]);
 
   function onChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
+    setSubmitError('');
+    setSaving(true);
     const lines = [
-      'Hello, inquiry from the ' + config.brandName + ' website:',
+      'Hello, inquiry from the ' + settings.brandName + ' website:',
       'Name: ' + form.name.trim(),
       'Phone: ' + form.phone.trim()
     ];
     if (form.college.trim()) lines.push('College: ' + form.college.trim());
     if (form.message.trim()) lines.push('', form.message.trim());
-    window.location.href = whatsappUrl(lines.join('\n'));
+    try {
+      await api('/api/inquiries', { method: 'POST', body: form });
+      window.location.href = whatsappUrl(lines.join('\n'), settings);
+    } catch (err) {
+      setSubmitError(err.message || 'Could not send this inquiry. Try again.');
+      setSaving(false);
+    }
   }
 
   return (
@@ -41,7 +53,7 @@ export default function Contact() {
           <p>
             Have your preferred style, colours, measurements and quantity ready.
             <br />
-            Single-piece and institutional orders welcome.
+            WhatsApp {settings.whatsappName}, call {settings.phoneName}, or visit us in {settings.city}.
           </p>
           <div className="order-list">
             <span>
@@ -60,40 +72,36 @@ export default function Contact() {
           <div className="contact-grid">
             <div>
               <p className="eyebrow">
-                <span className="line"></span> 03 / BETTER TOGETHER
+                <span className="line"></span> 03 / GET IN TOUCH
               </p>
               <h2>
                 One identity.
                 <br />
                 <em>Every individual.</em>
               </h2>
-              <p className="contact-lede">WhatsApp is the fastest way to reach us. Use the form and we will open a pre-filled message for you.</p>
+              <p className="contact-lede">WhatsApp is the fastest way to reach us. Use the form and we will open a pre-filled message for {settings.whatsappName}.</p>
               <ul className="contact-list">
                 <li>
                   <span aria-label="WhatsApp">
                     <Icon name="whatsapp" size={22} />
                   </span>
-                  <a href={whatsappUrl('Hello, I would like to order uniforms from ' + config.brandName + '.')}>
-                    Message us <Icon name="arrowUpRight" />
+                  <a href={whatsappUrl('Hello, I would like to order scrubs from ' + settings.brandName + '.', settings)}>
+                    {settings.whatsappName} · {settings.whatsappDisplay} <Icon name="arrowUpRight" />
                   </a>
                 </li>
                 <li>
                   <span aria-label="Phone">
                     <Icon name="phone" size={22} />
                   </span>
-                  <a href={telHref()}>{config.phoneDisplay}</a>
+                  <a href={telHref(settings.phoneNumber, settings)}>
+                    {settings.phoneName} · {settings.phoneDisplay}
+                  </a>
                 </li>
                 <li>
-                  <span aria-label="Email">
-                    <Icon name="mail" size={22} />
-                  </span>
-                  <a href={'mailto:' + config.email}>{config.email}</a>
-                </li>
-                <li>
-                  <span aria-label="Based in">
+                  <span aria-label="Visit us">
                     <Icon name="pin" size={22} />
                   </span>
-                  <strong>{config.city}</strong>
+                  <strong>{settings.address}</strong>
                 </li>
               </ul>
             </div>
@@ -124,8 +132,9 @@ export default function Contact() {
                   onChange={onChange}
                 />
               </div>
-              <button type="submit" className="button dark">
-                Send on WhatsApp <Icon name="whatsapp" />
+              {submitError ? <p className="form-error">{submitError}</p> : null}
+              <button type="submit" className="button dark" disabled={saving}>
+                {saving ? 'Sending…' : 'Send on WhatsApp'} <Icon name="whatsapp" />
               </button>
             </form>
           </div>

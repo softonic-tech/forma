@@ -4,16 +4,16 @@ export function formatPrice(n) {
   return 'PKR ' + Number(n).toLocaleString('en-PK');
 }
 
-export function whatsappUrl(text) {
+export function whatsappUrl(text, settings = config) {
   return (
     'https://wa.me/' +
-    config.whatsappNumber +
+    (settings.whatsappNumber || config.whatsappNumber) +
     '?text=' +
     encodeURIComponent(text)
   );
 }
 
-export function telHref() {
-  var n = String(config.whatsappNumber || '');
+export function telHref(number, settings = config) {
+  var n = String(number || settings.phoneNumber || settings.whatsappNumber || '');
   return n.charAt(0) === '+' ? 'tel:' + n : 'tel:+' + n;
 }

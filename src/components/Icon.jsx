@@ -78,6 +78,62 @@ const icons = {
       <path d="M4 12l8 4 8-4" />
       <path d="M4 16l8 4 8-4" />
     </>
+  ),
+  breath: (
+    <>
+      <path d="M12 20V10" />
+      <path d="M8 14c-3-1-4-4-3-7" />
+      <path d="M16 14c3-1 4-4 3-7" />
+      <path d="M9 9c-2-3 0-6 3-6 3 0 5 3 3 6" />
+    </>
+  ),
+  stretch: (
+    <>
+      <path d="M8 8L4 4m0 0h5M4 4v5" />
+      <path d="M16 8l4-4m0 0h-5m5 0v5" />
+      <path d="M8 16l-4 4m0 0h5m-5 0v-5" />
+      <path d="M16 16l4 4m0 0h-5m5 0v-5" />
+    </>
+  ),
+  feather: (
+    <>
+      <path d="M20 4c-6 1-12 8-14 16" />
+      <path d="M14 6s-2 6-8 12" />
+      <path d="M11 9l6 6" />
+    </>
+  ),
+  wash: (
+    <>
+      <rect x="5" y="4" width="14" height="16" rx="2" />
+      <path d="M8 4v2h8V4" />
+      <circle cx="12" cy="13" r="4" />
+      <path d="M10.2 13c.4-1.2 1.2-2 1.8-2s1.4.8 1.8 2" />
+    </>
+  ),
+  shield: (
+    <>
+      <path d="M12 3l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z" />
+      <path d="M9 12l2 2 4-4" />
+    </>
+  ),
+  pocket: (
+    <>
+      <path d="M8 4h8v6c0 4-2.5 8-4 10-1.5-2-4-6-4-10V4z" />
+      <path d="M8 9h8" />
+    </>
+  ),
+  menu: (
+    <>
+      <path d="M4 7h16" />
+      <path d="M4 12h16" />
+      <path d="M4 17h16" />
+    </>
+  ),
+  close: (
+    <>
+      <path d="M6 6l12 12" />
+      <path d="M18 6L6 18" />
+    </>
   )
 };
 

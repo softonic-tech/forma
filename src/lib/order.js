@@ -1,4 +1,4 @@
-const ORDER_KEY = 'forma-order';
+const ORDER_KEY = 'glowfit-order';
 
 export function getOrder() {
   try {

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import Layout from '../components/Layout.jsx';
+import { useStore } from '../context/StoreContext.jsx';
 
 const rows = [
   ['XS', '32–34', '24–26', '34–36', '25', '29'],
@@ -13,9 +14,11 @@ const rows = [
 ];
 
 export default function SizeGuide() {
+  const { settings } = useStore();
+
   useEffect(() => {
-    document.title = 'Size guide | FORMA';
-  }, []);
+    document.title = 'Size guide | ' + settings.brandName;
+  }, [settings]);
 
   return (
     <Layout>

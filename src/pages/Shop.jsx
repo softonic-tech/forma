@@ -3,24 +3,25 @@ import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import Layout from '../components/Layout.jsx';
 import ProductCard from '../components/ProductCard.jsx';
-import { CATALOG, COLORS } from '../data/catalog.js';
+import { useStore } from '../context/StoreContext.jsx';
 
 export default function Shop() {
+  const { products, colors, settings } = useStore();
   const [category, setCategory] = useState('all');
   const [color, setColor] = useState('all');
 
   useEffect(() => {
-    document.title = 'The collection | FORMA';
-  }, []);
+    document.title = 'The collection | ' + settings.brandName;
+  }, [settings]);
 
   const matches = useMemo(
     () =>
-      CATALOG.filter((p) => {
+      products.filter((p) => {
         const catOk = category === 'all' || p.category === category;
         const colorOk = color === 'all' || p.colors.some((c) => c.id === color);
         return catOk && colorOk;
       }),
-    [category, color]
+    [category, color, products]
   );
 
   return (
@@ -33,13 +34,13 @@ export default function Shop() {
                 <span className="line"></span> 01 / THE EVERYDAY COLLECTION
               </p>
               <h1>
-                Good fit.
+                Perfect fit.
                 <br />
-                <em>Great feeling.</em>
+                <em>Everyday comfort.</em>
               </h1>
             </div>
             <p>
-              For your first day on campus and every shift after.
+              Premium quality scrubs for your first day on campus and every shift after.
               <br />
               Pick a colour and quantity, or enter measurements for one piece.
             </p>
@@ -81,7 +82,7 @@ export default function Shop() {
               >
                 All
               </button>
-              {COLORS.map((c) => (
+              {colors.map((c) => (
                 <button
                   key={c.id}
                   type="button"

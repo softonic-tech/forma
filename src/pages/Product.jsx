@@ -3,15 +3,15 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import Layout from '../components/Layout.jsx';
 import { useOrder } from '../context/OrderContext.jsx';
-import { CATALOG } from '../data/catalog.js';
-import { config } from '../data/config.js';
+import { useStore } from '../context/StoreContext.jsx';
 import { formatPrice } from '../lib/format.js';
 
 export default function Product() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { setOrder } = useOrder();
-  const product = CATALOG.find((p) => p.slug === slug);
+  const { products, settings, ready } = useStore();
+  const product = products.find((p) => p.slug === slug);
 
   const [color, setColor] = useState(product ? product.colors[0] : null);
   const [size, setSize] = useState(product ? product.sizes[2] || product.sizes[0] : 'M');
@@ -29,16 +29,16 @@ export default function Product() {
 
   useEffect(() => {
     if (product) {
-      document.title = product.name + ' | ' + (config.brandName || 'FORMA');
+      document.title = product.name + ' | ' + settings.brandName;
       setColor(product.colors[0]);
       setSize(product.sizes[2] || product.sizes[0]);
       setQty(1);
       setFit('standard');
       setError('');
     } else {
-      document.title = 'Product | FORMA';
+      document.title = 'Product | ' + settings.brandName;
     }
-  }, [product]);
+  }, [product, settings]);
 
   function updateMeasure(e) {
     const { name, value } = e.target;
@@ -67,6 +67,17 @@ export default function Product() {
   }
 
   if (!product) {
+    if (!ready) {
+      return (
+        <Layout>
+          <main>
+            <div className="section">
+              <p className="page-note">Loading this piece…</p>
+            </div>
+          </main>
+        </Layout>
+      );
+    }
     return (
       <Layout>
         <main>
