@@ -21,14 +21,13 @@ if (isProd) {
 
 const app = createApp();
 
+app.listen(PORT, '0.0.0.0', () => {
+  console.log('Glow Fit API on http://127.0.0.1:' + PORT);
+});
+
 connectDb()
   .then(() => seed())
-  .then(() => {
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log('Glow Fit API on http://127.0.0.1:' + PORT);
-    });
-  })
+  .then(() => console.log('MongoDB ready'))
   .catch((err) => {
     console.error(err.message || err);
-    process.exit(1);
   });
